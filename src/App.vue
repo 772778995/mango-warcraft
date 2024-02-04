@@ -3,7 +3,7 @@
     <!-- 左侧 -->
     <div _flex="~ col" _h="full" _p="20px">
       <div _border="~ [#303030]">
-        <div _w="325px" _bg="[#1c1d1f]">
+        <div _w="225px" _bg="[#1c1d1f]">
           <!-- 用户信息 -->
           <div
             _flex="~"
@@ -176,7 +176,7 @@
     </div>
 
     <!-- 右侧 -->
-    <div _m="l-20px" _flex="~ col 1" _p="15px">
+    <div _flex="~ col 1" _p="15px">
       <div _w="full" _flex="~ items-center">
         <div
           _flex="~"
@@ -257,7 +257,7 @@
                 <div
                   v-for="item in goodsList"
                   :key="item.title"
-                  _w="260px"
+                  _w="190px"
                   _bg="[#303030]"
                   _border="rounded"
                   _flex="~ col items-center"
@@ -271,8 +271,8 @@
                   <div _m="t-15px">{{ item.title }}</div>
                   <img
                     _m="y-15px"
-                    _w="200px"
-                    _h="140px"
+                    _w="160px"
+                    _h="100px"
                     _object="cover"
                     :src="BASE_URL + item.img"
                   />
@@ -296,18 +296,20 @@
     <!-- 登录/注册弹窗 -->
     <el-dialog :visible.sync="isLoginDialogShow" width="400px">
       <div _text="white" _p="y-20px x-50px" _flex="~ col center" _bg="[#333]">
-        <el-form _space="y-20px">
-          <el-input dark v-model="loginForm.account" outlined>
+        <el-form>
+          <el-input v-model="loginForm.account">
             <template v-slot:prepend>
               <el-icon name="user" />
             </template>
           </el-input>
 
-          <el-input dark v-model="loginForm.password" outlined>
-            <template v-slot:prepend>
-              <el-icon name="lock" />
-            </template>
-          </el-input>
+          <div _m="y-10px">
+            <el-input v-model="loginForm.password">
+              <template v-slot:prepend>
+                <el-icon name="lock" />
+              </template>
+            </el-input>
+          </div>
 
           <el-button
             v-if="isRegisterDialogShow"
@@ -322,7 +324,7 @@
               登录
             </el-button>
 
-            <div _flex="~ center">
+            <div _m="y-10px" _flex="~ center">
               <el-checkbox v-model="isRemberLogin" label="记住我的登录" />
             </div>
 
@@ -332,10 +334,10 @@
               <div _h="1px" _flex="1" _bg="gray-500" />
             </div>
 
-            <div _w="full" _flex="~ justify-between">
-              <el-button color="secondary" @click="isRegisterDialogShow = true"
-                >转到注册</el-button
-              >
+            <div _m="y-10px" _w="full" _flex="~ justify-between">
+              <el-button color="secondary" @click="isRegisterDialogShow = true">
+                转到注册
+              </el-button>
               <el-button color="secondary">找回服务</el-button>
             </div>
 
