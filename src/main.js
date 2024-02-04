@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import App from './App.vue'
 import 'windi.css'
+import './plugins/element.js'
 
 Vue.config.productionTip = false
 
