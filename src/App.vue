@@ -17,7 +17,6 @@
                 _w="60px"
                 _h="60px"
                 _border="rounded"
-                :class="userInfo ? 'pointer-events-none' : 'cursor-pointer'"
                 @click="isLoginDialogShow = true"
               />
 
@@ -293,6 +292,92 @@
         </div>
       </div>
     </div>
+
+    <!-- 登录/注册弹窗 -->
+    <el-dialog :visible.sync="isLoginDialogShow" width="400px">
+      <div _text="white" _p="y-20px x-50px" _flex="~ col center" _bg="[#333]">
+        <el-form _space="y-20px">
+          <el-input dark v-model="loginForm.account" outlined>
+            <template v-slot:prepend>
+              <el-icon name="user" />
+            </template>
+          </el-input>
+
+          <el-input dark v-model="loginForm.password" outlined>
+            <template v-slot:prepend>
+              <el-icon name="lock" />
+            </template>
+          </el-input>
+
+          <el-button
+            v-if="isRegisterDialogShow"
+            _w="full"
+            color="primary"
+            @click="registerHandler"
+          >
+            注册
+          </el-button>
+          <template v-else>
+            <el-button _w="full" color="primary" @click="loginHandler">
+              登录
+            </el-button>
+
+            <div _flex="~ center">
+              <el-checkbox v-model="isRemberLogin" label="记住我的登录" />
+            </div>
+
+            <div _flex="~ items-center">
+              <div _h="1px" _flex="1" _bg="gray-500" />
+              <div _m="x-5px" _text="gray-500">或者您还可以</div>
+              <div _h="1px" _flex="1" _bg="gray-500" />
+            </div>
+
+            <div _w="full" _flex="~ justify-between">
+              <el-button color="secondary" @click="isRegisterDialogShow = true"
+                >转到注册</el-button
+              >
+              <el-button color="secondary">找回服务</el-button>
+            </div>
+
+            <div _flex="~ center" _text="blue-400" _cursor="pointer">
+              <i class="fa-solid fa-phone" _m="r-10px" _text="20px"></i>
+              联系在线客服
+            </div>
+          </template>
+        </el-form>
+      </div>
+    </el-dialog>
+
+    <!-- 商品详情弹窗 -->
+    <el-dialog :visible.sync="isGoodsDetailDialogShow" width="400px">
+      <div
+        v-if="activeGoodsDetail"
+        _flex="~ col center"
+        _p="y-20px"
+        _text="white"
+      >
+        <div>{{ activeGoodsDetail.title }}</div>
+        <img
+          _m="t-20px"
+          _w="200px"
+          _h="140px"
+          :src="BASE_URL + activeGoodsDetail.img"
+        />
+        <div _m="t-10px" _w="full" _text="center white/50 12px">
+          <div _w="3/4" _m="auto">{{ activeGoodsDetail.sub_title }}</div>
+          <div _m="y-10px">合计消耗</div>
+        </div>
+        <div _flex="~ items-center">
+          <img src="./assets/img/coin.png" _w="15px" _h="15px" _m="r-5px" />
+          <div>{{ activeGoodsDetail.price }}</div>
+        </div>
+
+        <div _m="t-10px" _flex="~ justify-center">
+          <el-button _m="r-20px">购买</el-button>
+          <el-button @click="isGoodsDetailDialogShow = false">取消</el-button>
+        </div>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -333,6 +418,9 @@ api.interceptors.response.use(
 export default {
   data() {
     return {
+      isGoodsDetailDialogShow: false,
+      isLoginDialogShow: false,
+      isRegisterDialogShow: false,
       BASE_URL,
       userInfo: {},
       goodsCategory: [],
@@ -403,5 +491,12 @@ export default {
 ::-webkit-scrollbar-thumb {
   border-radius: 10px;
   background-color: #555;
+}
+.el-dialog__header {
+  background: #333;
+}
+.el-dialog__body {
+  color: white;
+  background: #333;
 }
 </style>
