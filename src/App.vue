@@ -54,18 +54,6 @@
 
           <!-- 积分点数 -->
           <div _p="y-20px x-15px">
-            <div _flex="~ items-center">
-              <img _w="15px" _h="15px" src="./assets/img/coin.png" />
-              <div
-                _m="l-10px"
-                _p="x-6px y-2px"
-                _bg="white/10"
-                _text="white"
-                _border="rounded"
-              >
-                0积分点数
-              </div>
-            </div>
 
             <div _m="t-8px" _flex="~ items-center">
               <img _w="15px" _h="15px" src="./assets/img/coin.png" />
@@ -127,14 +115,12 @@
         <div
           v-for="(item, i) in ([
             { txt: '主页', icon: 'fa-house' },
-            { txt: '主页', icon: 'fa-house' },
-            { txt: '主页', icon: 'fa-house' },
-            { txt: '主页', icon: 'fa-house' },
-            { txt: '主页', icon: 'fa-house' },
-            { txt: '主页', icon: 'fa-house' },
-            { txt: '主页', icon: 'fa-house' },
-            { txt: '主页', icon: 'fa-house' },
-            { txt: '主页', icon: 'fa-house' }
+            { txt: '论坛', icon: 'fa-house' },
+            { txt: '商城', icon: 'fa-house' },
+            { txt: '插件', icon: 'fa-house' },
+            { txt: '备用', icon: 'fa-house' },
+            { txt: '排行', icon: 'fa-house' },
+            { txt: '问答', icon: 'fa-house' }
           ])"
           :key="item.txt"
           _flex="~ items-center"
@@ -188,13 +174,10 @@
           <div
             v-for="item in [
               { txt: '主页' },
-              { txt: '主页' },
-              { txt: '主页' },
-              { txt: '主页' },
-              { txt: '主页' },
-              { txt: '主页' },
-              { txt: '主页' },
-              { txt: '主页' },
+              { txt: '新闻' },
+              { txt: '活动' },
+              { txt: '社区' },
+              { txt: '日志' }
             ]"
             :key="item.txt"
             _w="100px"
@@ -385,7 +368,7 @@
 
 <script>
 import Axios from "axios";
-const BASE_URL = "https://www.moshou80.com:8088";
+const BASE_URL = "http://103.85.87.250:8087";
 const api = Axios.create({ baseURL: BASE_URL + "/api" });
 
 api.interceptors.request.use((config) => {
