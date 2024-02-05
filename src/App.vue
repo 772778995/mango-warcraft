@@ -133,7 +133,7 @@
       <!-- PLAY -->
       <div
         _flex="~"
-        _m="t-auto b-50px"
+        _m="t-auto"
         _w="full"
         _h="70px"
         _bg="[#4c4d4d]"
@@ -150,6 +150,15 @@
         >
           PLAY
         </div>
+      </div>
+
+      <div
+        _m="t-14px b-30px"
+        _text="blue-400 center"
+        _cursor="pointer"
+        @click="isLoginDialogShow = isRegisterDialogShow = true"
+      >
+        注册用户
       </div>
     </div>
 
@@ -277,7 +286,7 @@
     <el-dialog
       :visible.sync="isLoginDialogShow"
       width="400px"
-      :before-close="() => (isLoginDialogShow = isRegisterDialogShow = false)"
+      :before-close="beforeCloseLoginDialog"
     >
       <div _text="white" _p="y-20px x-50px" _flex="~ col center" _bg="[#333]">
         <el-form>
@@ -498,6 +507,10 @@ export default {
     async buyGoodHandler() {
       await api.post("/exchange/item", { alias: this.activeGoodsDetail.alias });
       this.isGoodsDetailDialogShow = false;
+    },
+    beforeCloseLoginDialog(done) {
+      done();
+      setTimeout(() => (this.isRegisterDialogShow = false), 300);
     },
   },
 };
