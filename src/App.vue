@@ -290,19 +290,37 @@
     >
       <div _text="white" _p="y-20px x-50px" _flex="~ col center" _bg="[#333]">
         <el-form>
-          <el-input v-model="loginForm.account">
+          <el-input v-if="!isRegisterDialogShow" v-model="loginForm.account">
+            <template v-slot:prepend>
+              <el-icon name="user" />
+            </template>
+          </el-input>
+          <el-input v-else v-model="registerForm.username">
             <template v-slot:prepend>
               <el-icon name="user" />
             </template>
           </el-input>
 
           <div _m="y-10px">
-            <el-input v-model="loginForm.password">
+            <el-input v-if="!isRegisterDialogShow" v-model="loginForm.password">
+              <template v-slot:prepend>
+                <el-icon name="lock" />
+              </template>
+            </el-input>
+
+            <el-input v-else v-model="registerForm.password">
               <template v-slot:prepend>
                 <el-icon name="lock" />
               </template>
             </el-input>
           </div>
+
+          <el-input
+            v-if="isRegisterDialogShow"
+            v-model="loginForm.invitation_code"
+            _m="b-10px"
+            placeholder="邀请码"
+          />
 
           <el-button
             v-if="isRegisterDialogShow"
@@ -417,6 +435,10 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
   (config) => {
     setReqs(-1);
+    if (config.data.code !== 200) {
+      if (config.data.msg) Message.error(config.data.msg);
+      throw new Error(config.data.msg);
+    }
     return config.data.data;
   },
   (err) => {
@@ -459,6 +481,11 @@ export default {
         account: "",
         password: "",
       },
+      registerForm: {
+        username: "",
+        password: "",
+        invitation_code: "",
+      },
       /** 兑换表单 */
       exchangeForm: {
         character_name: "",
@@ -487,7 +514,6 @@ export default {
     /** 登录 */
     async loginHandler() {
       const res = await api.post("/user/login", this.loginForm);
-      if (!res) return Message.error("密码不正确");
       this.userInfo = res.userinfo;
       if (this.isRemberLogin) localStorage.setItem("userInfo", res.userinfo);
       Message.success("登录成功");
@@ -500,8 +526,10 @@ export default {
     },
     /** 注册 */
     async registerHandler() {
-      await api.post("/user/register");
-      this.isRegisterDialogShow = false;
+      const res = await api.post("/user/register", this.registerForm);
+      this.userInfo = res.userinfo;
+      this.isLoginDialogShow = this.isRegisterDialogShow = false;
+      Message.success("注册成功");
     },
     /** 打开商品详情 */
     goodsClickHandler(goodDetail) {
