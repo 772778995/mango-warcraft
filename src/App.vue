@@ -136,7 +136,6 @@
           _filter="~"
           _transition="duration-300"
           _hover="brightness-110"
-          @click="play"
         >
           PLAY
         </div>
@@ -563,6 +562,13 @@ export default {
 </script>
 
 <style>
+@font-face {
+  font-family: "YaHei";
+  src: url("./assets/font/MicrosoftYahei.otf");
+}
+html body {
+  font-family: "YaHei";
+}
 ::-webkit-scrollbar {
   width: 10px;
   background-color: transparent;
