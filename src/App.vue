@@ -422,12 +422,11 @@ const setReqs = (n) => {
 
 api.interceptors.request.use((config) => {
   setReqs(1);
-  const token = localStorage.getItem("token");
+  const userInfo = JSON.parse(localStorage.getItem("userinfo") || "{}");
+  const token = userInfo.token;
   if (token) {
     if (!config.headers) config.headers = {};
-    Object.assign(config.headers, {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    });
+    Object.assign(config.headers, { token });
   }
   return config;
 });
@@ -504,6 +503,11 @@ export default {
     },
   },
   async mounted() {
+    const userInfoStorage = JSON.parse(
+      localStorage.getItem("userinfo") || "{}"
+    );
+    if (userInfoStorage.token) this.userInfo = userInfoStorage;
+
     this.goodsCategory = await api.get("/goods/goodsCategory");
     if (this.goodsCategory.length) {
       this.activeGoodsCateId = this.goodsCategory[0].id;
@@ -515,19 +519,21 @@ export default {
     async loginHandler() {
       const res = await api.post("/user/login", this.loginForm);
       this.userInfo = res.userinfo;
-      if (this.isRemberLogin) localStorage.setItem("userInfo", res.userinfo);
+      if (this.isRemberLogin)
+        localStorage.setItem("userinfo", JSON.stringify(res.userinfo));
       Message.success("登录成功");
       this.isLoginDialogShow = false;
     },
     /** 退出登录 */
     logoutHandler() {
       this.userInfo = null;
-      localStorage.setItem("userInfo", JSON.stringify(this.userInfo));
+      localStorage.removeItem("userinfo");
     },
     /** 注册 */
     async registerHandler() {
       const res = await api.post("/user/register", this.registerForm);
       this.userInfo = res.userinfo;
+      localStorage.setItem("userinfo", JSON.stringify(res.userinfo));
       this.isLoginDialogShow = this.isRegisterDialogShow = false;
       Message.success("注册成功");
     },
@@ -548,6 +554,7 @@ export default {
         alias: this.activeGoodsDetail.alias,
         character_name: this.exchangeForm.character_name,
       });
+      Message.success("操作成功");
       this.isGoodsDetailDialogShow = false;
     },
     beforeCloseLoginDialog(done) {
