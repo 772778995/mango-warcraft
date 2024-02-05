@@ -157,7 +157,6 @@
         <div
           _flex="~"
           _p="5px"
-          _bg=""
           class="bg-gradient-to-r to-transparent from-white/10"
           _border="rounded"
         >
@@ -344,16 +343,16 @@
             </div>
 
             <div _m="y-10px" _w="full" _flex="~ justify-between">
-              <el-button color="secondary" @click="isRegisterDialogShow = true">
-                转到注册
+              <el-button @click="isRegisterDialogShow = true">
+                注册账号
               </el-button>
-              <el-button color="secondary">找回服务</el-button>
+              <el-button>忘记密码</el-button>
             </div>
 
-            <div _flex="~ center" _text="blue-400" _cursor="pointer">
+            <!-- <div _flex="~ center" _text="blue-400" _cursor="pointer">
               <i class="fa-solid fa-phone" _m="r-10px" _text="20px"></i>
               联系在线客服
-            </div>
+            </div> -->
           </template>
         </el-form>
       </div>
