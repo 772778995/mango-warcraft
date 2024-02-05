@@ -366,7 +366,11 @@
           <img src="./assets/img/coin.png" _w="15px" _h="15px" _m="r-5px" />
           <div>{{ activeGoodsDetail.price }}</div>
         </div>
-
+          <div _flex="~ items-center">
+              <div _m="y-10px">
+              <el-input v-model="exchangeForm.character_name" placeholder="角色名称"/>
+          </div>
+          </div>
         <div _m="t-10px" _flex="~ justify-center">
           <el-button _m="r-20px" @click="buyGoodHandler">购买</el-button>
           <el-button @click="isGoodsDetailDialogShow = false">取消</el-button>
@@ -449,9 +453,13 @@ export default {
       isRemberLogin: true,
       /** 登录表单 */
       loginForm: {
-        account: "admin",
-        password: "123456",
+        account: "",
+        password: "",
       },
+      /** 兑换表单 */
+      exchangeForm: {
+          character_name : "",
+      }
     };
   },
   computed: {
@@ -505,7 +513,7 @@ export default {
     },
     /** 购买商品 */
     async buyGoodHandler() {
-      await api.post("/exchange/item", { alias: this.activeGoodsDetail.alias });
+      await api.post("/exchange/item", { alias: this.activeGoodsDetail.alias,character_name: this.exchangeForm.character_name });
       this.isGoodsDetailDialogShow = false;
     },
     beforeCloseLoginDialog(done) {
