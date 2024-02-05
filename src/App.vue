@@ -319,11 +319,17 @@
             _w="full"
             type="primary"
             @click="registerHandler"
+            @keydown.enter="registerHandler"
           >
             注册
           </el-button>
           <template v-else>
-            <el-button _w="full" type="primary" @click="loginHandler">
+            <el-button
+              _w="full"
+              type="primary"
+              @click="loginHandler"
+              @keydown.enter="loginHandler"
+            >
               登录
             </el-button>
 
