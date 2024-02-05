@@ -12,4 +12,5 @@ module.exports = defineConfig({
   pluginOptions: {
     windicss: windPreset,
   },
+  publicPath: "./",
 });
