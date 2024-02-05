@@ -242,7 +242,7 @@
             </div>
           </div>
 
-          <div _flex="~ 1" _p="x-15px" _text="white/90">
+          <div _flex="~ 1" _p="x-15px" _text="white/90" _overflow="y-auto">
             <div _w="full">
               <div _w="full" _flex="~ wrap" _overflow="auto">
                 <!-- 商品列表 -->
