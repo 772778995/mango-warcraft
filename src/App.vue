@@ -142,12 +142,15 @@
       </div>
 
       <div
-        _m="t-14px b-30px"
-        _text="blue-400 center"
-        _cursor="pointer"
-        @click="isLoginDialogShow = isRegisterDialogShow = true"
+        _m="t-14px b-30px x-25px"
+        _text="blue-400"
+        _flex="~ justify-between"
+        _children="cursor-pointer"
       >
-        注册用户
+        <!-- <div @click="isLoginDialogShow = isRegisterDialogShow = true"> -->
+        <div @click="injectRegisterHandler">注册用户</div>
+
+        <div @click="injectResetPsdHandler">重置密码</div>
       </div>
     </div>
 
@@ -275,6 +278,7 @@
 
     <!-- 登录/注册弹窗 -->
     <el-dialog
+      :title="isRegisterDialogShow ? '注册用户' : '登录用户'"
       :visible.sync="isLoginDialogShow"
       width="400px"
       :before-close="beforeCloseLoginDialog"
@@ -343,10 +347,8 @@
             </div>
 
             <div _m="y-10px" _w="full" _flex="~ justify-between">
-              <el-button @click="isRegisterDialogShow = true">
-                注册账号
-              </el-button>
-              <el-button>忘记密码</el-button>
+              <el-button @click="injectRegisterHandler"> 注册账号 </el-button>
+              <el-button @click="injectForgetPsdHandler">忘记密码</el-button>
             </div>
 
             <!-- <div _flex="~ center" _text="blue-400" _cursor="pointer">
@@ -358,8 +360,56 @@
       </div>
     </el-dialog>
 
+    <el-dialog
+      title="重置密码"
+      :visible.sync="isResetPsdDialogShow"
+      width="400px"
+    >
+      <el-form :model="resetPsdForm" _m="y-20px x-50px">
+        <el-form-item
+          prop="newpassword"
+          :rules="[{ required: true, message: '新密码不能为空' }]"
+        >
+          <el-input
+            v-model="resetPsdForm.newpassword"
+            type="password"
+            placeholder="新密码"
+          />
+        </el-form-item>
+        <el-form-item
+          prop="confirmPsd"
+          :rules="[
+            { required: true, message: '确认密码不能为空' },
+            {
+              validator: (rule, value, callback) => {
+                if (value !== resetPsdForm.newpassword)
+                  callback('密码输入不一致');
+                else callback();
+              },
+            },
+          ]"
+        >
+          <el-input
+            v-model="resetPsdForm.confirmPsd"
+            type="password"
+            placeholder="确认密码"
+          />
+        </el-form-item>
+        <el-form-item prop="security_code">
+          <el-input v-model="registerForm.security_code" placeholder="安全码" />
+        </el-form-item>
+        <el-button type="primary" _w="full" @click="injectResetPsdHandler">
+          重置密码
+        </el-button>
+      </el-form>
+    </el-dialog>
+
     <!-- 商品详情弹窗 -->
-    <el-dialog :visible.sync="isGoodsDetailDialogShow" width="400px">
+    <el-dialog
+      title="商品详情"
+      :visible.sync="isGoodsDetailDialogShow"
+      width="400px"
+    >
       <div
         v-if="activeGoodsDetail"
         _flex="~ col center"
@@ -456,6 +506,8 @@ export default {
       isLoginDialogShow: false,
       /** 是否显示注册弹窗 */
       isRegisterDialogShow: false,
+      /** 是否显示重置密码弹窗 */
+      isResetPsdDialogShow: false,
       /** 服务端根路径 */
       BASE_URL,
       /** 用户信息 */
@@ -477,10 +529,17 @@ export default {
         account: "",
         password: "",
       },
+      /** 注册表单 */
       registerForm: {
         username: "",
         password: "",
         invitation_code: "",
+      },
+      /** 重置密码表单 */
+      resetPsdForm: {
+        newpassword: "",
+        confirmPsd: "",
+        security_code: "",
       },
       /** 兑换表单 */
       exchangeForm: {
@@ -557,6 +616,23 @@ export default {
       done();
       setTimeout(() => (this.isRegisterDialogShow = false), 300);
     },
+    /** 重置密码 */
+    async resetPsdHandler() {
+      await api.post("/user/resetpwd");
+      Message.success("重置密码成功");
+    },
+    injectRegisterHandler() {
+      if (window.wow_dialog_regist) window.wow_dialog_regist();
+      else Message.error("不存在 wow_dialog_regist 方法");
+    },
+    injectResetPsdHandler() {
+      if (window.wow_dialog_modify) window.wow_dialog_regist();
+      else Message.error("不存在 wow_dialog_modify 方法");
+    },
+    injectForgetPsdHandler() {
+      if (window.wow_dialog_forget) window.wow_dialog_forget();
+      else Message.error("不存在 wow_dialog_forget 方法");
+    },
   },
 };
 </script>
@@ -577,9 +653,8 @@ html body {
   border-radius: 10px;
   background-color: #555;
 }
-.el-dialog__header {
-  background: #333;
-}
+.el-dialog__header,
+.el-dialog__header span,
 .el-dialog__body {
   color: white;
   background: #333;
