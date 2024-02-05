@@ -211,7 +211,10 @@
           <div _border="~ black" _w="200px" _p="y-10px">
             <!-- 商品分类列表 -->
             <div
-              v-for="item in goodsCategory"
+              v-for="item in [
+                { id: undefined, name: '全部' },
+                ...goodsCategory,
+              ]"
               :key="item.txt"
               _flex="~ items-center"
               _p="y-6px x-12px"
@@ -472,7 +475,7 @@ export default {
       /** 选中的商品详情信息 */
       activeGoodsDetail: null,
       /** 选中的商品分类ID */
-      activeGoodsCateId: -1,
+      activeGoodsCateId: undefined,
       /** 是否记住登录 */
       isRemberLogin: true,
       /** 登录表单 */
@@ -510,7 +513,6 @@ export default {
 
     this.goodsCategory = await api.get("/goods/goodsCategory");
     if (this.goodsCategory.length) {
-      this.activeGoodsCateId = this.goodsCategory[0].id;
       await this.updateGoodsList();
     }
   },
