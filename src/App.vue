@@ -40,8 +40,8 @@
             </div>
 
             <div
+              v-if="userInfo.token"
               title="退出登录"
-              class="fa-solid fa-angles-right"
               _p="x-2px"
               _h="full"
               _flex="~ items-center"
@@ -49,7 +49,9 @@
               _hover="filter brightness-110"
               _cursor="pointer"
               @click="logoutHandler"
-            />
+            >
+              <i class="el-icon-d-arrow-right"></i>
+            </div>
           </div>
 
           <!-- 积分点数 -->
@@ -63,20 +65,7 @@
                 _text="white"
                 _border="rounded"
               >
-                0积分点数
-              </div>
-            </div>
-
-            <div _m="t-8px" _flex="~ items-center">
-              <img _w="15px" _h="15px" src="./assets/img/coin.png" />
-              <div
-                _m="l-10px"
-                _p="x-6px y-2px"
-                _bg="white/10"
-                _text="white"
-                _border="rounded"
-              >
-                0积分点数
+                {{ userInfo.integral ? userInfo.integral : 0 }}积分点数
               </div>
             </div>
           </div>
@@ -212,7 +201,10 @@
           <div _border="~ black" _w="200px" _p="y-10px">
             <!-- 商品分类列表 -->
             <div
-              v-for="item in goodsCategory"
+              v-for="item in [
+                { id: undefined, name: '全部' },
+                ...goodsCategory,
+              ]"
               :key="item.txt"
               _flex="~ items-center"
               _p="y-6px x-12px"
@@ -240,7 +232,7 @@
             </div>
           </div>
 
-          <div _flex="~ 1" _p="x-15px" _text="white/90">
+          <div _flex="~ 1" _p="x-15px" _text="white/90" _overflow="y-auto">
             <div _w="full">
               <div _w="full" _flex="~ wrap" _overflow="auto">
                 <!-- 商品列表 -->
@@ -328,11 +320,17 @@
             _w="full"
             type="primary"
             @click="registerHandler"
+            @keydown.enter="registerHandler"
           >
             注册
           </el-button>
           <template v-else>
-            <el-button _w="full" type="primary" @click="loginHandler">
+            <el-button
+              _w="full"
+              type="primary"
+              @click="loginHandler"
+              @keydown.enter="loginHandler"
+            >
               登录
             </el-button>
 
@@ -473,7 +471,7 @@ export default {
       /** 选中的商品详情信息 */
       activeGoodsDetail: null,
       /** 选中的商品分类ID */
-      activeGoodsCateId: -1,
+      activeGoodsCateId: undefined,
       /** 是否记住登录 */
       isRemberLogin: true,
       /** 登录表单 */
@@ -511,7 +509,6 @@ export default {
 
     this.goodsCategory = await api.get("/goods/goodsCategory");
     if (this.goodsCategory.length) {
-      this.activeGoodsCateId = this.goodsCategory[0].id;
       await this.updateGoodsList();
     }
   },
@@ -527,7 +524,7 @@ export default {
     },
     /** 退出登录 */
     logoutHandler() {
-      this.userInfo = null;
+      this.userInfo = {};
       localStorage.removeItem("userinfo");
     },
     /** 注册 */
