@@ -85,15 +85,13 @@
         <!-- 饿了么图标库 https://element.eleme.cn/2.0/#/zh-CN/component/icon -->
         <div
           v-for="(item, i) in [
-            { txt: '主页', icon: 'el-icon-edit' },
-            { txt: '主页', icon: 'el-icon-edit' },
-            { txt: '主页', icon: 'el-icon-edit' },
-            { txt: '主页', icon: 'el-icon-edit' },
-            { txt: '主页', icon: 'el-icon-edit' },
-            { txt: '主页', icon: 'el-icon-edit' },
-            { txt: '主页', icon: 'el-icon-edit' },
-            { txt: '主页', icon: 'el-icon-edit' },
-            { txt: '主页', icon: 'el-icon-edit' },
+            { txt: '主页', icon: 'el-icon-s-home' },
+            { txt: '论坛', icon: 'el-icon-news' },
+            { txt: '商城', icon: 'el-icon-goods' },
+            { txt: '插件', icon: 'el-icon-plus' },
+            { txt: '备用', icon: 'el-icon-menu' },
+            { txt: '排行', icon: 'el-icon-s-data' },
+            { txt: '问答', icon: 'el-icon-service' },
           ]"
           :key="i"
           _flex="~ items-center"
