@@ -294,7 +294,11 @@
     </div>
 
     <!-- 登录/注册弹窗 -->
-    <el-dialog :visible.sync="isLoginDialogShow" width="400px">
+    <el-dialog
+      :visible.sync="isLoginDialogShow"
+      width="400px"
+      :before-close="() => (isLoginDialogShow = isRegisterDialogShow = false)"
+    >
       <div _text="white" _p="y-20px x-50px" _flex="~ col center" _bg="[#333]">
         <el-form>
           <el-input v-model="loginForm.account">
