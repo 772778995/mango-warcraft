@@ -366,11 +366,14 @@
           <img src="./assets/img/coin.png" _w="15px" _h="15px" _m="r-5px" />
           <div>{{ activeGoodsDetail.price }}</div>
         </div>
-          <div _flex="~ items-center">
-              <div _m="y-10px">
-              <el-input v-model="exchangeForm.character_name" placeholder="角色名称"/>
+        <div _flex="~ items-center">
+          <div _m="y-10px">
+            <el-input
+              v-model="exchangeForm.character_name"
+              placeholder="角色名称"
+            />
           </div>
-          </div>
+        </div>
         <div _m="t-10px" _flex="~ justify-center">
           <el-button _m="r-20px" @click="buyGoodHandler">购买</el-button>
           <el-button @click="isGoodsDetailDialogShow = false">取消</el-button>
@@ -393,8 +396,8 @@ const setReqs = (n) => {
   reqs += n;
   if (reqs > 0) {
     loadInts = Loading.service({ background: "#00000060" });
-  } else {
-    loadInts?.close();
+  } else if (loadInts) {
+    loadInts.close();
     loadInts = null;
   }
 };
@@ -458,8 +461,8 @@ export default {
       },
       /** 兑换表单 */
       exchangeForm: {
-          character_name : "",
-      }
+        character_name: "",
+      },
     };
   },
   computed: {
@@ -513,7 +516,10 @@ export default {
     },
     /** 购买商品 */
     async buyGoodHandler() {
-      await api.post("/exchange/item", { alias: this.activeGoodsDetail.alias,character_name: this.exchangeForm.character_name });
+      await api.post("/exchange/item", {
+        alias: this.activeGoodsDetail.alias,
+        character_name: this.exchangeForm.character_name,
+      });
       this.isGoodsDetailDialogShow = false;
     },
     beforeCloseLoginDialog(done) {
