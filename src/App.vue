@@ -40,8 +40,8 @@
             </div>
 
             <div
+              v-if="userInfo.token"
               title="退出登录"
-              class="fa-solid fa-angles-right"
               _p="x-2px"
               _h="full"
               _flex="~ items-center"
@@ -49,7 +49,9 @@
               _hover="filter brightness-110"
               _cursor="pointer"
               @click="logoutHandler"
-            />
+            >
+              <i class="el-icon-d-arrow-right"></i>
+            </div>
           </div>
 
           <!-- 积分点数 -->
@@ -63,20 +65,7 @@
                 _text="white"
                 _border="rounded"
               >
-                0积分点数
-              </div>
-            </div>
-
-            <div _m="t-8px" _flex="~ items-center">
-              <img _w="15px" _h="15px" src="./assets/img/coin.png" />
-              <div
-                _m="l-10px"
-                _p="x-6px y-2px"
-                _bg="white/10"
-                _text="white"
-                _border="rounded"
-              >
-                0积分点数
+                {{ userInfo.integral ? userInfo.integral : 0 }}积分点数
               </div>
             </div>
           </div>
@@ -528,7 +517,7 @@ export default {
     },
     /** 退出登录 */
     logoutHandler() {
-      this.userInfo = null;
+      this.userInfo = {};
       localStorage.removeItem("userinfo");
     },
     /** 注册 */
