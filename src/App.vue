@@ -307,13 +307,13 @@
           <el-button
             v-if="isRegisterDialogShow"
             _w="full"
-            color="primary"
+            type="primary"
             @click="registerHandler"
           >
             注册
           </el-button>
           <template v-else>
-            <el-button _w="full" color="primary" @click="loginHandler">
+            <el-button _w="full" type="primary" @click="loginHandler">
               登录
             </el-button>
 
@@ -500,7 +500,7 @@ export default {
     },
     /** 注册 */
     async registerHandler() {
-      await api.post("");
+      await api.post("/user/register");
       this.isRegisterDialogShow = false;
     },
     /** 打开商品详情 */
