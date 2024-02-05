@@ -80,37 +80,6 @@
               </div>
             </div>
           </div>
-
-          <!-- 按钮组 -->
-          <!-- <div
-            _w="full"
-            _flex="~ justify-between"
-            _p="y-15px x-20px"
-            _bg="[#22211d]"
-            _text="[#2e2e2e] 20px"
-            _border="t [#303030]"
-          >
-            <div
-              v-for="item in [
-                'fa-user',
-                'fa-bag-shopping',
-                'fa-envelope',
-                'fa-calendar',
-                'fa-gift'
-              ]"
-              :key="item"
-              class="fa-solid"
-              :class="item"
-              _flex="~ center"
-              _w="40px"
-              _h="40px"
-              _border="rounded-full"
-              _bg="[#717171]"
-              _transition="duration-300"
-              _hover="text-orange-400 text-30px bg-transparent"
-              _cursor="pointer"
-            />
-          </div> -->
         </div>
       </div>
 
@@ -124,19 +93,20 @@
         _border="1.5px rounded-sm [#303030]"
       >
         <!-- prettier-ignore -->
+        <!-- 饿了么图标库 https://element.eleme.cn/2.0/#/zh-CN/component/icon -->
         <div
-          v-for="(item, i) in ([
-            { txt: '主页', icon: 'fa-house' },
-            { txt: '主页', icon: 'fa-house' },
-            { txt: '主页', icon: 'fa-house' },
-            { txt: '主页', icon: 'fa-house' },
-            { txt: '主页', icon: 'fa-house' },
-            { txt: '主页', icon: 'fa-house' },
-            { txt: '主页', icon: 'fa-house' },
-            { txt: '主页', icon: 'fa-house' },
-            { txt: '主页', icon: 'fa-house' }
-          ])"
-          :key="item.txt"
+          v-for="(item, i) in [
+            { txt: '主页', icon: 'el-icon-edit' },
+            { txt: '主页', icon: 'el-icon-edit' },
+            { txt: '主页', icon: 'el-icon-edit' },
+            { txt: '主页', icon: 'el-icon-edit' },
+            { txt: '主页', icon: 'el-icon-edit' },
+            { txt: '主页', icon: 'el-icon-edit' },
+            { txt: '主页', icon: 'el-icon-edit' },
+            { txt: '主页', icon: 'el-icon-edit' },
+            { txt: '主页', icon: 'el-icon-edit' },
+          ]"
+          :key="i"
           _flex="~ items-center"
           _p="x-15px y-5px"
           _cursor="pointer"
@@ -147,15 +117,15 @@
         >
           <div
             _flex="~ center"
-            class="fa-solid"
-            :class="item.icon"
             _w="30px"
             _h="30px"
             _bg="[#171717]"
             _text="14px"
             _border="rounded-full"
             _m="r-15px"
-          />
+          >
+            <i :class="item.icon" />
+          </div>
           <div>{{ item.txt }}</div>
         </div>
       </div>
@@ -170,8 +140,16 @@
         _border="rounded-4px"
         _cursor="pointer"
       >
-        <div _flex="1 ~ center" _bg="orange-400" _text="30px">PLAY</div>
-        <!-- <div class="fa-solid fa-bars" _flex="~ center" _w="70px" _h="full" _text="30px" /> -->
+        <div
+          _flex="1 ~ center"
+          _bg="orange-400"
+          _text="30px"
+          _filter="~"
+          _transition="duration-300"
+          _hover="brightness-110"
+        >
+          PLAY
+        </div>
       </div>
     </div>
 
@@ -186,7 +164,7 @@
           _border="rounded"
         >
           <div
-            v-for="item in [
+            v-for="(item, i) in [
               { txt: '主页' },
               { txt: '主页' },
               { txt: '主页' },
@@ -196,7 +174,7 @@
               { txt: '主页' },
               { txt: '主页' },
             ]"
-            :key="item.txt"
+            :key="i"
             _w="100px"
             _h="40px"
             _flex="~ center"
@@ -222,6 +200,7 @@
         </div>
         <div _flex="~ 1" _m="t-15px" _overflow="y-auto">
           <div _border="~ black" _w="200px" _p="y-10px">
+            <!-- 商品分类列表 -->
             <div
               v-for="item in goodsCategory"
               :key="item.txt"
@@ -254,6 +233,7 @@
           <div _flex="~ 1" _p="x-15px" _text="white/90">
             <div _w="full">
               <div _w="full" _flex="~ wrap" _overflow="auto">
+                <!-- 商品列表 -->
                 <div
                   v-for="item in goodsList"
                   :key="item.title"
@@ -294,7 +274,11 @@
     </div>
 
     <!-- 登录/注册弹窗 -->
-    <el-dialog :visible.sync="isLoginDialogShow" width="400px">
+    <el-dialog
+      :visible.sync="isLoginDialogShow"
+      width="400px"
+      :before-close="() => (isLoginDialogShow = isRegisterDialogShow = false)"
+    >
       <div _text="white" _p="y-20px x-50px" _flex="~ col center" _bg="[#333]">
         <el-form>
           <el-input v-model="loginForm.account">
@@ -375,7 +359,7 @@
         </div>
 
         <div _m="t-10px" _flex="~ justify-center">
-          <el-button _m="r-20px">购买</el-button>
+          <el-button _m="r-20px" @click="buyGoodHandler">购买</el-button>
           <el-button @click="isGoodsDetailDialogShow = false">取消</el-button>
         </div>
       </div>
@@ -385,10 +369,25 @@
 
 <script>
 import Axios from "axios";
-const BASE_URL = "https://www.moshou80.com:8088";
+import { Loading, Message } from "element-ui";
+const BASE_URL = "http://103.85.87.250:8087";
+// const BASE_URL = "https://www.moshou80.com:8088";
 const api = Axios.create({ baseURL: BASE_URL + "/api" });
 
+let reqs = 0;
+let loadInts = null;
+const setReqs = (n) => {
+  reqs += n;
+  if (reqs > 0) {
+    loadInts = Loading.service({ background: "#00000060" });
+  } else {
+    loadInts?.close();
+    loadInts = null;
+  }
+};
+
 api.interceptors.request.use((config) => {
+  setReqs(1);
   const token = localStorage.getItem("token");
   if (token) {
     if (!config.headers) config.headers = {};
@@ -401,18 +400,15 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (config) => {
-    // if (config.data.msg)
-    //   Notify.create({
-    //     type: 'positive',
-    //     message: config.data.msg
-    //   })
+    setReqs(-1);
     return config.data.data;
   },
   (err) => {
+    setReqs(-1);
     const code = err.code || err.response.status || 500;
     const msg = err.message || err.response.data || err.response.statusText;
     const errMsg = `${code}：${msg}`;
-    alert(errMsg);
+    Message.error(errMsg);
     throw new Error(errMsg);
   }
 );
@@ -420,17 +416,29 @@ api.interceptors.response.use(
 export default {
   data() {
     return {
+      /** 是否显示商品详情弹窗 */
       isGoodsDetailDialogShow: false,
+      /** 是否显示登录弹窗 */
       isLoginDialogShow: false,
+      /** 是否显示注册弹窗 */
       isRegisterDialogShow: false,
+      /** 服务端根路径 */
       BASE_URL,
+      /** 用户信息 */
       userInfo: {},
+      /** 商品分了列表 */
       goodsCategory: [],
+      /** 商品列表 */
       goodsList: [],
+      /** 左侧的分类索引 */
       activeCateIndex: 0,
+      /** 选中的商品详情信息 */
       activeGoodsDetail: null,
+      /** 选中的商品分类ID */
       activeGoodsCateId: -1,
+      /** 是否记住登录 */
       isRemberLogin: true,
+      /** 登录表单 */
       loginForm: {
         account: "admin",
         password: "123456",
@@ -456,30 +464,40 @@ export default {
     }
   },
   methods: {
+    /** 登录 */
     async loginHandler() {
       const res = await api.post("/user/login", this.loginForm);
-      if (!res) return alert("密码不正确");
+      if (!res) return Message.error("密码不正确");
       this.userInfo = res.userinfo;
       if (this.isRemberLogin) localStorage.setItem("userInfo", res.userinfo);
-      alert("登录成功");
+      Message.success("登录成功");
       this.isLoginDialogShow = false;
     },
+    /** 退出登录 */
     logoutHandler() {
       this.userInfo = null;
       localStorage.setItem("userInfo", JSON.stringify(this.userInfo));
     },
+    /** 注册 */
     async registerHandler() {
       await api.post("");
       this.isRegisterDialogShow = false;
     },
+    /** 打开商品详情 */
     goodsClickHandler(goodDetail) {
       this.activeGoodsDetail = goodDetail;
       this.isGoodsDetailDialogShow = true;
     },
+    /** 更新商品列表 */
     async updateGoodsList() {
       this.goodsList = await api.get("/goods/list", {
         params: { category_id: this.activeGoodsCateId },
       });
+    },
+    /** 购买商品 */
+    async buyGoodHandler() {
+      await api.post("/exchange/item", { alias: this.activeGoodsDetail.alias });
+      this.isGoodsDetailDialogShow = false;
     },
   },
 };
