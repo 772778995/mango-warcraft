@@ -136,6 +136,7 @@
           _filter="~"
           _transition="duration-300"
           _hover="brightness-110"
+          @click="play"
         >
           PLAY
         </div>
@@ -401,8 +402,8 @@
 <script>
 import Axios from "axios";
 import { Loading, Message } from "element-ui";
-const BASE_URL = "http://103.85.87.250:8087";
-// const BASE_URL = "https://www.moshou80.com:8088";
+// const BASE_URL = "http://103.85.87.250:8087";
+const BASE_URL = "https://www.moshou80.com:8088";
 const api = Axios.create({ baseURL: BASE_URL + "/api" });
 
 let reqs = 0;
