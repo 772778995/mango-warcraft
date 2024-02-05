@@ -379,7 +379,7 @@
         </div>
 
         <div _m="t-10px" _flex="~ justify-center">
-          <el-button _m="r-20px">购买</el-button>
+          <el-button _m="r-20px" @click="buyGoodHandler">购买</el-button>
           <el-button @click="isGoodsDetailDialogShow = false">取消</el-button>
         </div>
       </div>
@@ -389,10 +389,25 @@
 
 <script>
 import Axios from "axios";
+import { Loading, Message } from "element-ui";
 const BASE_URL = "https://www.moshou80.com:8088";
 const api = Axios.create({ baseURL: BASE_URL + "/api" });
 
+let reqs = 0;
+let loadInts = null;
+const setReqs = (n) => {
+  reqs += n;
+  console.log(reqs);
+  if (reqs > 0) {
+    loadInts = Loading.service({ background: "#00000060" });
+  } else {
+    loadInts?.close();
+    loadInts = null;
+  }
+};
+
 api.interceptors.request.use((config) => {
+  setReqs(1);
   const token = localStorage.getItem("token");
   if (token) {
     if (!config.headers) config.headers = {};
@@ -405,18 +420,15 @@ api.interceptors.request.use((config) => {
 
 api.interceptors.response.use(
   (config) => {
-    // if (config.data.msg)
-    //   Notify.create({
-    //     type: 'positive',
-    //     message: config.data.msg
-    //   })
+    setReqs(-1);
     return config.data.data;
   },
   (err) => {
+    setReqs(-1);
     const code = err.code || err.response.status || 500;
     const msg = err.message || err.response.data || err.response.statusText;
     const errMsg = `${code}：${msg}`;
-    alert(errMsg);
+    Message.error(errMsg);
     throw new Error(errMsg);
   }
 );
@@ -462,10 +474,10 @@ export default {
   methods: {
     async loginHandler() {
       const res = await api.post("/user/login", this.loginForm);
-      if (!res) return alert("密码不正确");
+      if (!res) return Message.error("密码不正确");
       this.userInfo = res.userinfo;
       if (this.isRemberLogin) localStorage.setItem("userInfo", res.userinfo);
-      alert("登录成功");
+      Message.success("登录成功");
       this.isLoginDialogShow = false;
     },
     logoutHandler() {
@@ -484,6 +496,10 @@ export default {
       this.goodsList = await api.get("/goods/list", {
         params: { category_id: this.activeGoodsCateId },
       });
+    },
+    async buyGoodHandler() {
+      await api.post("/exchange/item", { alias: this.activeGoodsDetail.alias });
+      this.isGoodsDetailDialogShow = false;
     },
   },
 };
