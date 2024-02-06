@@ -18,18 +18,17 @@
               <div
                 _flex="~ col justify-between"
                 _h="60px"
-                _m="l-15px"
+                _m="l-15px m-15px"
                 _text="13px"
               >
-                <div _font="bold">{{ username }}</div>
+                <div _font="bold" @click="isLoginDialogShow = true">{{ username }}</div>
                 <div>Player</div>
                 <div
                   _p="y-4px x-3px"
-                  _bg="white/10"
                   _text="12px white/50"
                   _border="rounded"
                 >
-                  昵称:{{ nickname }}
+<!--                  昵称:{{ nickname }}-->
                 </div>
               </div>
             </div>
@@ -144,8 +143,9 @@
           _filter="~"
           _transition="duration-300"
           _hover="brightness-110"
+          @click="injectPlay"
         >
-          PLAY
+          开始游戏
         </div>
       </div>
 
@@ -158,7 +158,7 @@
         <!-- <div @click="isLoginDialogShow = isRegisterDialogShow = true"> -->
         <div @click="injectRegisterHandler">注册用户</div>
 
-        <div @click="injectResetPsdHandler">重置密码</div>
+        <div @click="injectResetPsdHandler">修改密码</div>
       </div>
     </div>
 
@@ -174,13 +174,10 @@
           <div
             v-for="(item, i) in [
               { txt: '主页' },
-              { txt: '主页' },
-              { txt: '主页' },
-              { txt: '主页' },
-              { txt: '主页' },
-              { txt: '主页' },
-              { txt: '主页' },
-              { txt: '主页' },
+              { txt: '新闻' },
+              { txt: '活动' },
+              { txt: '社区' },
+              { txt: '日志' }
             ]"
             :key="i"
             _w="100px"
@@ -407,7 +404,7 @@
           <el-input v-model="registerForm.security_code" placeholder="安全码" />
         </el-form-item>
         <el-button type="primary" _w="full" @click="injectResetPsdHandler">
-          重置密码
+          修改密码
         </el-button>
       </el-form>
     </el-dialog>
@@ -460,7 +457,8 @@
 import Axios from "axios";
 import { Loading, Message } from "element-ui";
 // const BASE_URL = "http://103.85.87.250:8087";
-const BASE_URL = "https://www.moshou80.com:8088";
+// const BASE_URL = "https://www.moshou80.com:8088";
+const BASE_URL = "http://43.248.117.202:8797";
 const api = Axios.create({ baseURL: BASE_URL + "/api" });
 
 let reqs = 0;
@@ -541,7 +539,7 @@ export default {
       registerForm: {
         username: "",
         password: "",
-        invitation_code: "",
+        security_code: "",
       },
       /** 重置密码表单 */
       resetPsdForm: {
@@ -560,7 +558,7 @@ export default {
       return this.userInfo.avatar || "https://img.wuhaochao.top/funny.png";
     },
     username() {
-      return this.userInfo.username || "用户名";
+      return this.userInfo.username || "点我登录";
     },
     nickname() {
       return this.userInfo.nickname || "昵称";
@@ -634,13 +632,17 @@ export default {
       else Message.error("不存在 wow_dialog_regist 方法");
     },
     injectResetPsdHandler() {
-      if (window.wow_dialog_modify) window.wow_dialog_regist();
+      if (window.wow_dialog_modify) window.wow_dialog_modify();
       else Message.error("不存在 wow_dialog_modify 方法");
     },
     injectForgetPsdHandler() {
       if (window.wow_dialog_forget) window.wow_dialog_forget();
       else Message.error("不存在 wow_dialog_forget 方法");
     },
+    injectPlay(){
+        if (window.wow_startgame) window.wow_startgame();
+        else Message.error("不存在 wow_startgame 方法");
+      }
   },
 };
 </script>
