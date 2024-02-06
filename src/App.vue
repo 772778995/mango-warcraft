@@ -134,8 +134,9 @@
           _filter="~"
           _transition="duration-300"
           _hover="brightness-110"
+          @click="injectPlay"
         >
-          PLAY
+          开始游戏
         </div>
       </div>
 
@@ -628,6 +629,10 @@ export default {
       if (window.wow_dialog_forget) window.wow_dialog_forget();
       else Message.error("不存在 wow_dialog_forget 方法");
     },
+    injectPlay(){
+        if (window.wow_startgame) window.wow_startgame();
+        else Message.error("不存在 wow_startgame 方法");
+      }
   },
 };
 </script>
