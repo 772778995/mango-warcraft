@@ -6,19 +6,14 @@
         <div _w="225px" _bg="[#1c1d1f]">
           <!-- 用户信息 -->
           <div
+            v-if="userInfo.token"
             _flex="~"
             _w="full"
             _h="100px"
             _border="1.5px rounded-sm [#303030]"
           >
             <div _flex="~" _w="full" _p="15px">
-              <img
-                :src="avatar"
-                _w="60px"
-                _h="60px"
-                _border="rounded"
-                @click="isLoginDialogShow = true"
-              />
+              <img :src="avatar" _w="60px" _h="60px" _border="rounded" />
 
               <div
                 _flex="~ col justify-between"
@@ -52,6 +47,21 @@
             >
               <i class="el-icon-d-arrow-right"></i>
             </div>
+          </div>
+          <div
+            v-else
+            _flex="~ center"
+            _w="full"
+            _h="100px"
+            _text="white"
+            _bg="[#2b70fa]"
+            _transition="duration-300"
+            _border="1.5px rounded-[5px] [#2b70fa]"
+            _cursor="pointer"
+            _active="bg-white text-[#2b70fa]"
+            @click="isLoginDialogShow = true"
+          >
+            Get Started
           </div>
 
           <!-- 积分点数 -->
@@ -642,6 +652,7 @@ export default {
 }
 html body {
   font-family: "YaHei";
+  user-select: none;
 }
 ::-webkit-scrollbar {
   width: 10px;
