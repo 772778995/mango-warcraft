@@ -21,14 +21,12 @@
                 _m="l-15px m-15px"
                 _text="13px"
               >
-                <div _font="bold" @click="isLoginDialogShow = true">{{ username }}</div>
+                <div _font="bold" @click="isLoginDialogShow = true">
+                  {{ username }}
+                </div>
                 <div>Player</div>
-                <div
-                  _p="y-4px x-3px"
-                  _text="12px white/50"
-                  _border="rounded"
-                >
-<!--                  昵称:{{ nickname }}-->
+                <div _p="y-4px x-3px" _text="12px white/50" _border="rounded">
+                  <!--                  昵称:{{ nickname }}-->
                 </div>
               </div>
             </div>
@@ -64,7 +62,7 @@
           </div>
 
           <!-- 积分点数 -->
-          <div _p="y-20px x-15px">
+          <div _flex="~ justify-between items-end" _p="y-20px x-15px">
             <div _flex="~ items-center">
               <img _w="15px" _h="15px" src="./assets/img/coin.png" />
               <div
@@ -77,6 +75,9 @@
                 {{ userInfo.integral ? userInfo.integral : 0 }}积分点数
               </div>
             </div>
+
+            <div _text="blue-400" _cursor="pointer">刷新</div>
+            <div _text="blue-400" _cursor="pointer">充值</div>
           </div>
         </div>
       </div>
@@ -177,7 +178,7 @@
               { txt: '新闻' },
               { txt: '活动' },
               { txt: '社区' },
-              { txt: '日志' }
+              { txt: '日志' },
             ]"
             :key="i"
             _w="100px"
@@ -639,10 +640,10 @@ export default {
       if (window.wow_dialog_forget) window.wow_dialog_forget();
       else Message.error("不存在 wow_dialog_forget 方法");
     },
-    injectPlay(){
-        if (window.wow_startgame) window.wow_startgame();
-        else Message.error("不存在 wow_startgame 方法");
-      }
+    injectPlay() {
+      if (window.wow_startgame) window.wow_startgame();
+      else Message.error("不存在 wow_startgame 方法");
+    },
   },
 };
 </script>
