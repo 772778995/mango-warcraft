@@ -649,12 +649,9 @@ export default {
 </script>
 
 <style>
-@font-face {
-  font-family: "YaHei";
-  src: url("./assets/font/MicrosoftYahei.otf");
-}
 html body {
-  font-family: "YaHei";
+  font-family: Tahoma, Verdana, Arial, Helvetica, "苹方", "微软雅黑";
+  font-weight: bold;
   user-select: none;
 }
 ::-webkit-scrollbar {
