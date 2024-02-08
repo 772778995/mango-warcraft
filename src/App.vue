@@ -58,7 +58,7 @@
             _active="bg-white text-[#2b70fa]"
             @click="isLoginDialogShow = true"
           >
-            Get Started
+            点击登录
           </div>
 
           <!-- 积分点数 -->
@@ -69,15 +69,15 @@
                 _m="l-10px"
                 _p="x-6px y-2px"
                 _bg="white/10"
-                _text="white"
+                _text="white size-13px"
                 _border="rounded"
               >
-                {{ userInfo.integral ? userInfo.integral : 0 }}积分点数
+                {{ integral }}积分点数
               </div>
             </div>
 
-            <div _text="blue-400" _cursor="pointer">刷新</div>
-            <div _text="blue-400" _cursor="pointer">充值</div>
+            <div _text="blue-400 size-15px" _cursor="pointer" @click="injectRefresh">刷新</div>
+            <div _text="blue-400 size-15px" _cursor="pointer" @click="injectRecharge">充值</div>
           </div>
         </div>
       </div>
@@ -518,7 +518,9 @@ export default {
       /** 服务端根路径 */
       BASE_URL,
       /** 用户信息 */
-      userInfo: {},
+      userInfo: {
+          integral:0
+      },
       /** 商品分了列表 */
       goodsCategory: [],
       /** 商品列表 */
@@ -564,6 +566,9 @@ export default {
     nickname() {
       return this.userInfo.nickname || "昵称";
     },
+    integral(){
+        return this.userInfo.integral || 0;
+    }
   },
   async mounted() {
     const userInfoStorage = JSON.parse(
@@ -644,6 +649,14 @@ export default {
       if (window.wow_startgame) window.wow_startgame();
       else Message.error("不存在 wow_startgame 方法");
     },
+    async injectRefresh(){
+        const data = await api.post("/user/getIntegral");
+        this.userInfo.integral =  data.integral
+        Message.success("刷新成功");
+    },
+    injectRecharge(){
+      open('https://baidu.com',"_self")
+    }
   },
 };
 </script>
